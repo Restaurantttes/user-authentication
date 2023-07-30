@@ -1,4 +1,4 @@
-export const useWidth = (w: number, xs: number, sm: number, md: number, lg: number, lx: number): any => {
+export const useWidth = (w: number, xs: Size, sm: Size, md: Size, lg: Size, lx: Size): any => {
   if (w >= 0 && w <= 300) {
     return xs;
   } else if (w >= 300 && w <= 500) {
@@ -11,3 +11,5 @@ export const useWidth = (w: number, xs: number, sm: number, md: number, lg: numb
     return lx;
   }
 };
+
+type Size = string | number
