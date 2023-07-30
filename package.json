@@ -45,7 +45,7 @@
     "url": "git+https://github.com/fernando343/user-authentication.git"
   },
   "author": "Fernando Lopez <fernandojalope343@gmail.com> (https://github.com/fernando343)",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/fernando343/user-authentication/issues"
   },
