@@ -1,3 +1,4 @@
+import { useMutation } from "@apollo/client";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
@@ -7,6 +8,7 @@ import { ScrollView, TouchableOpacity } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { useTheme } from 'styled-components/native';
 import { AuthenticationContext } from '../../services/context/AuthenticationContext';
+import { LOGIN } from "../../services/graphql/mutation";
 import { getDeviceInput } from "../../utils/getDeviceInput";
 import { Logo } from "../Logo";
 import { Body, FieldContent, FieldsContent, LoginButtonContent } from "../styled";
@@ -27,6 +29,8 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
 
   const [err, setErr] = useState<boolean>(false); //Error
 
+  const [getLogin, { loading }] = useMutation(LOGIN);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -37,29 +41,29 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
       console.log(values);
 
       const deviceInput = await getDeviceInput(deviceIdentifier);
-      console.log(deviceInput);
-      
 
-      // getLogin({
-      // 	update(_, { data: { login: loginData } }) {
-      // 		if (loginData?.success) {
-      // 			setErr(false);
-      // 			const userData = {
-      // 				loginData,
-      // 				login: values,
-      // 			};
-      // 			login(userData);
-      // 		} else if (loginData?.error) {
-      // 			setErr(true);
-      // 		}
-      // 	},
-      // 	variables: {
-      // 		email: values.email,
-      // 		password: values.password,
-      // 		deviceInput,
-      // 		whereApp: whereApp,
-      // 	},
-      // });
+      getLogin({
+      	update(_, { data: { login: loginData } }) {
+      		if (loginData?.success) {
+      			setErr(false);
+      			const userData = {
+      				loginData,
+      				login: values,
+      			};
+            console.log(userData);
+            
+      			// login(userData);
+      		} else if (loginData?.error) {
+      			setErr(true);
+      		}
+      	},
+      	variables: {
+      		email: values.email,
+      		password: values.password,
+      		deviceInput,
+      		whereApp: whichApp,
+      	},
+      });
     },
   });
 
