@@ -27,7 +27,11 @@ export const Error500: React.FC<Props> = ({ error, refetch }) => {
 					backgroundColor: "transparent",
 				}}
 				source={{
-					uri: "https://assets5.lottiefiles.com/packages/lf20_8qMJfR.json",
+					uri:
+						error.message ===
+						"Response not successful: Received status code 404"
+							? "https://lottie.host/b98e87be-d5ca-4b38-b4c2-6087eeffa265/phDX7nZfBu.json"
+							: "https://assets5.lottiefiles.com/packages/lf20_8qMJfR.json",
 				}}
 			/>
 			<Text
@@ -38,6 +42,9 @@ export const Error500: React.FC<Props> = ({ error, refetch }) => {
 			>
 				{error.message === "Response not successful: Received status code 502"
 					? t("error.500")
+					: error.message ===
+					  "Response not successful: Received status code 404"
+					? t("error.not-found")
 					: error.message}
 			</Text>
 			<Button onPress={() => refetch()}>{t("update")}</Button>
