@@ -128,7 +128,7 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
         <Button
           mode="contained"
           theme={{ roundness: 1 }}
-          // loading={loading}
+          loading={loading}
           onPress={() => formik.handleSubmit()}
         >
           {t("authentication.login.login")}
