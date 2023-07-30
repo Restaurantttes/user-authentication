@@ -66,7 +66,11 @@ export const SessionContextProvider: React.FC = ({ children }) => {
   async function login(userData: UserDataType): Promise<void> {
     setLoadingAuthentication(true);
     setAccessToken(userData.loginData.accessToken);
+    saveEncryptedDataAsyncStorage("accessToken", userData.loginData.accessToken);
+
     setRefreshToken(userData.loginData.refreshToken);
+    saveEncryptedDataAsyncStorage("refreshToken", userData.loginData.refreshToken);
+
     setIsActiveUser(true);
 
     if (
@@ -105,10 +109,10 @@ const alertPermissionBiometricAuthentication = (
     type === BiometricType.TouchID
       ? t("authentication.biometric.message-touch-id")
       : type === BiometricType.FaceID
-      ? t("authentication.biometric.message-face-id")
-      : type === BiometricType.Iris
-      ? t("authentication.biometric.message-iris")
-      : t("authentication.biometric.message");
+        ? t("authentication.biometric.message-face-id")
+        : type === BiometricType.Iris
+          ? t("authentication.biometric.message-iris")
+          : t("authentication.biometric.message");
 
   Alert.alert(t("authentication.biometric.title"), message, [
     {
