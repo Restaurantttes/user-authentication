@@ -6,6 +6,7 @@ import { t } from "i18next";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import {
+  removeDataAsyncStorage,
   saveDataAsyncStorage,
   saveEncryptedDataAsyncStorage,
 } from "../../utils/storage";
@@ -62,6 +63,9 @@ export const SessionContextProvider: React.FC = ({ children }) => {
       setBiometricType(parseInt(type?.toString()) || BiometricType.None);
     })();
   }, []);
+
+  removeDataAsyncStorage("biometricPermission");
+  removeDataAsyncStorage("theme")
 
   async function login(userData: UserDataType): Promise<void> {
     setLoadingAuthentication(true);
