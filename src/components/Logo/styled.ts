@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { styled } from "styled-components/native";
+import styled from "styled-components/native";
 
 export const ContentLogo = styled.View`
   width: 100%;
