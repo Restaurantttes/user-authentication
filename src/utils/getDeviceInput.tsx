@@ -17,11 +17,16 @@ interface Device {
 }
 
 export async function getDeviceInput(identifier: string): Promise<Device> {
-	const token = (
-		await Notifications.getExpoPushTokenAsync({
-			projectId: Constants.expoConfig.extra.eas.projectId,
-		})
-	).data;
+	let token = null
+  
+  try {
+    const response = await Notifications.getExpoPushTokenAsync({
+      projectId: Constants.expoConfig.extra.eas.projectId,
+    });
+
+    token = response.data;
+  } catch (err) {
+  }
 
 	const deviceType = await Device.getDeviceTypeAsync();
 	return {
