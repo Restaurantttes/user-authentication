@@ -8,7 +8,7 @@ import { SessionContext, SessionContextProvider } from "./services/context/Sessi
 import { getDataAsyncStorage, saveDataAsyncStorage } from "./utils/storage";
 import { useWidth } from "./utils/useWidth";
 
-export {
+module.exports = {
   AuthenticationContext,
   AuthenticationContextProvider, Error500, FormForgotPassword, FormLogin,
   FormRegister, Loading, SessionContext,
@@ -16,5 +16,5 @@ export {
   getDataAsyncStorage,
   saveDataAsyncStorage,
   useWidth
-};
+}
 
