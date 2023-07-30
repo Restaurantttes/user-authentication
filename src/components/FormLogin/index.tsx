@@ -1,3 +1,4 @@
+import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useFormik } from "formik";
 import { t } from "i18next";
@@ -7,10 +8,15 @@ import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { useTheme } from 'styled-components/native';
 import { AuthenticationContext } from '../../services/context/AuthenticationContext';
 import { Logo } from "../Logo";
-import { Body, FieldContent, FieldsContent } from "../styled";
+import { Body, FieldContent, FieldsContent, LoginButtonContent } from "../styled";
 import { ValidationSchema } from "./ValidationSchema";
 
-export const FormLogin = () => {
+interface Props {
+  useSocialAuth: boolean;
+  whichApp: string;
+}
+
+export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
   const theme = useTheme();
   const { navigate } = useNavigation();
   const [secure, setSecure] = useState<boolean>(true);
@@ -133,6 +139,42 @@ export const FormLogin = () => {
             {t("authentication.login.forgot-password")}
           </Text>
         </TouchableOpacity>
+
+        {useSocialAuth || isBiometricAvailable ? (
+          <Text style={{ marginTop: 20, marginBottom: 5, textAlign: "center" }}>
+            {t("authentication.login.more")}
+          </Text>
+        ) : (
+          <></>
+        )}
+
+        {useSocialAuth && (
+          <>
+            <LoginButtonContent>
+              <FontAwesome.Button
+                name="google"
+                backgroundColor="#FAE9EA"
+                color="#DD4D44"
+                style={{ height: 45 }}
+                onPress={() => { }}
+              >
+                {t("authentication.login.google")}
+              </FontAwesome.Button>
+            </LoginButtonContent>
+
+            <LoginButtonContent>
+              <FontAwesome.Button
+                name="apple"
+                backgroundColor="#E3E3e3"
+                color="#363636"
+                style={{ height: 45 }}
+                onPress={() => { }}
+              >
+                {t("authentication.login.apple")}
+              </FontAwesome.Button>
+            </LoginButtonContent>
+          </>
+        )}
 
       </ScrollView>
     </Body>
