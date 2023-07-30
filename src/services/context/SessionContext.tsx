@@ -1,12 +1,25 @@
-import { authenticateAsync, supportedAuthenticationTypesAsync } from "expo-local-authentication";
+import {
+  authenticateAsync,
+  supportedAuthenticationTypesAsync,
+} from "expo-local-authentication";
 import { t } from "i18next";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Alert, Platform } from "react-native";
-import { saveDataAsyncStorage, saveEncryptedDataAsyncStorage } from "../../utils/storage";
+import { Alert } from "react-native";
+import {
+  saveDataAsyncStorage,
+  saveEncryptedDataAsyncStorage,
+} from "../../utils/storage";
 import { AuthenticationContext } from "./AuthenticationContext";
 
+enum BiometricType {
+  TouchID = 1,
+  FaceID = 2,
+  Iris = 3,
+  None = 0,
+}
+
 interface SessionContextType {
-  login: (userData: any) => void
+  login: (userData: UserDataType) => Promise<void>;
 }
 
 interface LoginData {
@@ -26,103 +39,86 @@ interface UserDataType {
 }
 
 export const SessionContext = createContext<SessionContextType>(
-  {} as SessionContextType)
+  {} as SessionContextType
+);
 
 export const SessionContextProvider: React.FC = ({ children }) => {
+  const {
+    setAccessToken,
+    setRefreshToken,
+    setIsActiveUser,
+    setLoadingAuthentication,
+    isBiometricAvailable,
+    permissionBiometric,
+  } = useContext(AuthenticationContext);
 
-  const { 
-    // accessToken, 
-    // refreshToken, 
-    setAccessToken, 
-    setRefreshToken, 
-    setIsActiveUser, 
-    setLoadingAuthentication, 
-    isBiometricAvailable, 
-    permissionBiometric 
-  } = useContext(AuthenticationContext)
-
-  const [biometricType, setBiometricType] = useState<number | null>(null);
+  const [biometricType, setBiometricType] = useState<BiometricType>(
+    BiometricType.None
+  );
 
   useEffect(() => {
-		(async () => {
-			const type = await supportedAuthenticationTypesAsync();
-			setBiometricType(parseInt(type?.toString()));
-		})();
-	}, []);
+    (async () => {
+      const type = await supportedAuthenticationTypesAsync();
+      setBiometricType(parseInt(type?.toString()) || BiometricType.None);
+    })();
+  }, []);
 
   async function login(userData: UserDataType): Promise<void> {
-		//Loafing the user data from the server
-		setLoadingAuthentication(true);
-		//Get Access Token
-		setAccessToken(userData.loginData.accessToken);
-		// saveSecureData("accessToken", userData.loginData.accessToken);
-		//Get Refresh Token
-		setRefreshToken(userData.loginData.refreshToken);
-		// saveSecureData("refreshToken", userData.loginData.refreshToken);
-		//Activate the user
-		setIsActiveUser(true);
+    setLoadingAuthentication(true);
+    setAccessToken(userData.loginData.accessToken);
+    setRefreshToken(userData.loginData.refreshToken);
+    setIsActiveUser(true);
 
-		//Activate biometric authentication
-		if (isBiometricAvailable) {
-			if (permissionBiometric === undefined || permissionBiometric === null) {
-				alertPermissionBiometricAuthentication(
-					biometricType,
-					JSON.stringify(userData.login),
-				);
-			}
-		}
-		await setLoadingAuthentication(false);
-	}
+    if (
+      isBiometricAvailable &&
+      (permissionBiometric === undefined || permissionBiometric === null)
+    ) {
+      alertPermissionBiometricAuthentication(
+        biometricType,
+        JSON.stringify(userData.login)
+      );
+    }
 
+    setLoadingAuthentication(false);
+  }
 
   return (
-      <SessionContext.Provider value={{login}}>
-        {children}
-      </SessionContext.Provider>
-    )
-}
-
-// Activate biometric authentication
-const activateBiometricAuth = async (credentials: any) => {
-	const result = await authenticateAsync();
-	if (result.success) {
-		saveDataAsyncStorage("biometricPermission", "true");
-		saveEncryptedDataAsyncStorage("authCredentials", credentials);
-	} else if (result.error) {}
+    <SessionContext.Provider value={{ login }}>
+      {children}
+    </SessionContext.Provider>
+  );
 };
 
-const alertPermissionBiometricAuthentication = (type: any, credentials: any) =>
-	Alert.alert(t("authentication.biometric.title"), getType(type), [
-		{
-			text: t("authentication.cancel"),
-			onPress: () => saveDataAsyncStorage("biometricPermission", "false"),
-			style: "cancel",
-		},
-		{
-			text: t("authentication.accept"),
-			onPress: () => activateBiometricAuth(credentials),
-		},
-	]);
+const activateBiometricAuth = async (credentials: any) => {
+  const result = await authenticateAsync();
+  if (result.success) {
+    saveDataAsyncStorage("biometricPermission", "true");
+    saveEncryptedDataAsyncStorage("authCredentials", credentials);
+  }
+};
 
-  const getType = (type: number) => {
-    const initType = parseInt(type?.toString());
-    const isIos = Platform.OS === "ios" ? true : false;
-  
-    switch (initType) {
-      case 1:
-        return isIos
-          ? t("authentication.biometric.message-touch-id")
-          : t("authentication.biometric.message-fingerprint");
-  
-      case 2:
-        return isIos
-          ? t("authentication.biometric.message-face-id")
-          : t("authentication.biometric.message-face-recognition");
-  
-      case 3:
-        return t("authentication.biometric.message-iris");
-  
-      default:
-        return t("authentication.biometric.message");
-    }
-  };
+const alertPermissionBiometricAuthentication = (
+  type: BiometricType,
+  credentials: any
+) => {
+  const message =
+    type === BiometricType.TouchID
+      ? t("authentication.biometric.message-touch-id")
+      : type === BiometricType.FaceID
+      ? t("authentication.biometric.message-face-id")
+      : type === BiometricType.Iris
+      ? t("authentication.biometric.message-iris")
+      : t("authentication.biometric.message");
+
+  Alert.alert(t("authentication.biometric.title"), message, [
+    {
+      text: t("authentication.cancel"),
+      onPress: () => saveDataAsyncStorage("biometricPermission", "false"),
+      style: "cancel",
+    },
+    {
+      text: t("authentication.accept"),
+      onPress: () => activateBiometricAuth(credentials),
+    },
+  ]);
+};
