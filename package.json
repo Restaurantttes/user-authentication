@@ -51,7 +51,7 @@
   },
   "homepage": "https://github.com/fernando343/user-authentication#readme",
   "publishConfig": {
-    "@YOUR-USERNAME:registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@apollo/client": "^3.7.17",
