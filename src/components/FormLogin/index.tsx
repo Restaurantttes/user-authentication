@@ -12,7 +12,7 @@ import { SessionContext } from "../../services/context/SessionContext";
 import { LOGIN } from "../../services/graphql/mutation";
 import { getDeviceInput } from "../../utils/getDeviceInput";
 import { Logo } from "../Logo";
-import { Body, FieldContent, FieldsContent, LoginButtonContent } from "../styled";
+import { Body, FieldContent, FieldsContent, Footer, LoginButtonContent } from "../styled";
 import { BiometricButton } from "./BiometricButton";
 import { ValidationSchema } from "./ValidationSchema";
 
@@ -190,6 +190,17 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
           setErr={setErr}
           deviceIdentifier={deviceIdentifier}
         />
+
+        <Footer>
+          <TouchableOpacity onPress={() => navigate("RegisterScreen")}>
+            <Text variant="bodyLarge">
+              {t("authentication.don-account")}{" "}
+              <Text style={{ color: theme.colors.primary, fontWeight: 600 }}>
+                {t("authentication.register.register")}
+              </Text>
+            </Text>
+          </TouchableOpacity>
+        </Footer>
 
       </ScrollView>
     </Body>
