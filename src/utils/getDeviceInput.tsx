@@ -26,7 +26,7 @@ export async function getDeviceInput(identifier: string): Promise<Device> {
 
     token = response.data;
   } catch (err) {
-		token = ''
+		token = 'None'
   }
 
 	const deviceType = await Device.getDeviceTypeAsync();
