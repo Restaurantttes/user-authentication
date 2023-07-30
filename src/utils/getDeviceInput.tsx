@@ -6,7 +6,7 @@ import { Platform } from "react-native";
 type DeviceType = false | "unknown" | "phone" | "tablet" | "desktop" | "tv";
 type OsType = 'iOS' | 'Android';
 
-interface Device {
+interface DeviceReturn {
   identifier: string;
   brand: string | null;
   operatingSystem: OsType;
@@ -16,7 +16,7 @@ interface Device {
   notifyToken: string;
 }
 
-export async function getDeviceInput(identifier: string): Promise<Device> {
+export async function getDeviceInput(identifier: string): Promise<DeviceReturn> {
 	let token = null
   
   try {
