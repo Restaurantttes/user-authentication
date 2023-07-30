@@ -7,7 +7,7 @@ interface Props {
   text: string;
 }
 
-export const NoFouned: React.FC<Props> = ({ text }) => {
+export const NoFound: React.FC<Props> = ({ text }) => {
   return (
     <Body>
       <LottieView
