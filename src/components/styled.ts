@@ -1,3 +1,4 @@
+import { Button } from "react-native-paper";
 import styled from "styled-components/native";
 
 export const Body = styled.SafeAreaView`
@@ -28,4 +29,8 @@ export const Footer = styled.View`
   width: 100%;
   margin-top: 40px;
   align-items: center;
+`;
+
+export const Btn = styled(Button)`
+  height: 45px;
 `;

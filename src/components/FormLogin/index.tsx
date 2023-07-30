@@ -13,6 +13,7 @@ import { LOGIN } from "../../services/graphql/mutation";
 import { getDeviceInput } from "../../utils/getDeviceInput";
 import { Logo } from "../Logo";
 import { Body, FieldContent, FieldsContent, LoginButtonContent } from "../styled";
+import { BiometricButton } from "./BiometricButton";
 import { ValidationSchema } from "./ValidationSchema";
 
 interface Props {
@@ -46,24 +47,24 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
       const deviceInput = await getDeviceInput(deviceIdentifier);
 
       getLogin({
-      	update(_, { data: { login: loginData } }) {
-      		if (loginData?.success) {
-      			setErr(false);
-      			const userData = {
-      				loginData,
-      				login: values,
-      			};
-      			login(userData);
-      		} else if (loginData?.error) {
-      			setErr(true);
-      		}
-      	},
-      	variables: {
-      		email: values.email,
-      		password: values.password,
-      		deviceInput,
-      		whereApp: whichApp,
-      	},
+        update(_, { data: { login: loginData } }) {
+          if (loginData?.success) {
+            setErr(false);
+            const userData = {
+              loginData,
+              login: values,
+            };
+            login(userData);
+          } else if (loginData?.error) {
+            setErr(true);
+          }
+        },
+        variables: {
+          email: values.email,
+          password: values.password,
+          deviceInput,
+          whereApp: whichApp,
+        },
       });
     },
   });
@@ -183,6 +184,12 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
             </LoginButtonContent>
           </>
         )}
+
+        <BiometricButton
+          whereApp={whichApp}
+          setErr={setErr}
+          deviceIdentifier={deviceIdentifier}
+        />
 
       </ScrollView>
     </Body>
