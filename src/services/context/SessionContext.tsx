@@ -2,7 +2,7 @@ import { authenticateAsync, supportedAuthenticationTypesAsync } from "expo-local
 import { t } from "i18next";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Alert, Platform } from "react-native";
-import { saveDataAsyncStorage, saveEncryptedDataAsyncStorage } from "src/utils/storage";
+import { saveDataAsyncStorage, saveEncryptedDataAsyncStorage } from "../../utils/storage";
 import { AuthenticationContext } from "./AuthenticationContext";
 
 interface SessionContextType {
