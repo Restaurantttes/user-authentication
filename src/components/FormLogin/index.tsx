@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { t } from "i18next";
 import React, { useContext, useState } from 'react';
 import { ScrollView } from "react-native";
-import { HelperText, TextInput } from "react-native-paper";
+import { Button, HelperText, TextInput } from "react-native-paper";
 import { useTheme } from 'styled-components/native';
 import { AuthenticationContext } from '../../services/context/AuthenticationContext';
 import { Logo } from "../Logo";
@@ -107,6 +107,15 @@ export const FormLogin = () => {
             <HelperText type="error">{formik.errors.password}</HelperText>
           )}
         </FieldContent>
+
+        <Button
+          mode="contained"
+          theme={{ roundness: 1 }}
+          // loading={loading}
+          onPress={() => formik.handleSubmit()}
+        >
+          {t("authentication.login.login")}
+        </Button>
 
       </ScrollView>
     </Body>
