@@ -5,15 +5,17 @@ import { Button, Text } from "react-native-paper";
 import { useTheme } from "styled-components";
 import { Body } from "./styled";
 
+type ErrorType = {
+	message: string;
+};
+
 interface Props {
-	error: any;
+	error: ErrorType;
 	refetch: () => void;
 }
 
 export const Error500: React.FC<Props> = ({ error, refetch }) => {
 	const theme = useTheme();
-	console.log(error);
-	
 
 	return (
 		<Body>
@@ -34,7 +36,9 @@ export const Error500: React.FC<Props> = ({ error, refetch }) => {
 					color: theme.colors.error.button,
 				}}
 			>
-				{t("error.500")}
+				{error.message === "Response not successful: Received status code 502"
+					? t("error.500")
+					: error.message}
 			</Text>
 			<Button onPress={() => refetch()}>{t("update")}</Button>
 		</Body>
