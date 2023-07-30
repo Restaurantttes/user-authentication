@@ -7,6 +7,7 @@ import { ScrollView, TouchableOpacity } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { useTheme } from 'styled-components/native';
 import { AuthenticationContext } from '../../services/context/AuthenticationContext';
+import { getDeviceInput } from "../../utils/getDeviceInput";
 import { Logo } from "../Logo";
 import { Body, FieldContent, FieldsContent, LoginButtonContent } from "../styled";
 import { ValidationSchema } from "./ValidationSchema";
@@ -35,7 +36,9 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
     onSubmit: async (values) => {
       console.log(values);
 
-      // const deviceInput = await getDeviceInput(deviceIdentifier);
+      const deviceInput = await getDeviceInput(deviceIdentifier);
+      console.log(deviceInput);
+      
 
       // getLogin({
       // 	update(_, { data: { login: loginData } }) {
