@@ -8,6 +8,7 @@ import { ScrollView, TouchableOpacity } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { useTheme } from 'styled-components/native';
 import { AuthenticationContext } from '../../services/context/AuthenticationContext';
+import { SessionContext } from "../../services/context/SessionContext";
 import { LOGIN } from "../../services/graphql/mutation";
 import { getDeviceInput } from "../../utils/getDeviceInput";
 import { Logo } from "../Logo";
@@ -26,6 +27,8 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
   const { deviceIdentifier, isBiometricAvailable } = useContext(
     AuthenticationContext,
   );
+
+  const { login } = useContext(SessionContext);
 
   const [err, setErr] = useState<boolean>(false); //Error
 
@@ -50,9 +53,7 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
       				loginData,
       				login: values,
       			};
-            console.log(userData);
-            
-      			// login(userData);
+      			login(userData);
       		} else if (loginData?.error) {
       			setErr(true);
       		}
