@@ -35,7 +35,7 @@ jobs:
       - run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-
+          
       - run: npm publish --ignore-scripts
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GH_REGISTRY_PACKAGES}}
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
