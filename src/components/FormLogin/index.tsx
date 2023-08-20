@@ -42,7 +42,6 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
     },
     validationSchema: ValidationSchema(),
     onSubmit: async (values) => {
-      console.log(values);
 
       const deviceInput = await getDeviceInput(deviceIdentifier);
 

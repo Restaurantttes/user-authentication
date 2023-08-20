@@ -7,7 +7,7 @@ import { Loading } from "./components/UI/Loading";
 import { NoFound } from "./components/UI/NoFound";
 import { AuthenticationContext, AuthenticationContextProvider } from "./services/context/AuthenticationContext";
 import { SessionContext, SessionContextProvider } from "./services/context/SessionContext";
-import { getDataAsyncStorage, saveDataAsyncStorage } from "./utils/storage";
+import { getDataAsyncStorage, getDataEncryptedAsyncStorage, saveDataAsyncStorage, saveEncryptedDataAsyncStorage } from "./utils/storage";
 import { useWidth } from "./utils/useWidth";
 
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
   SessionContextProvider,
   getDataAsyncStorage,
   saveDataAsyncStorage,
-  useWidth, Empty, NoFound
+  useWidth, Empty, NoFound, saveEncryptedDataAsyncStorage, getDataEncryptedAsyncStorage
 }
 
 
