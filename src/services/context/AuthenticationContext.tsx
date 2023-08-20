@@ -15,8 +15,8 @@ interface AuthenticationContextType {
   deviceIdentifier: string;
   isBiometricAvailable: boolean;
   permissionBiometric: boolean;
-  setAccessToken: (token: string) => void;
-  setRefreshToken: (token: string) => void;
+  setAccessToken: (token: string | null) => void;
+  setRefreshToken: (token: string | null) => void;
   setIsActiveUser: (isActive: boolean) => void;
   setLoadingAuthentication: (isLoading: boolean) => void;
 }

@@ -6,6 +6,7 @@ import { t } from "i18next";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import {
+  removeEncryptedDataAsyncStorage,
   saveDataAsyncStorage,
   saveEncryptedDataAsyncStorage
 } from "../../utils/storage";
@@ -20,6 +21,7 @@ enum BiometricType {
 
 interface SessionContextType {
   login: (userData: UserDataType) => Promise<void>;
+  logout: () => Promise<void>
 }
 
 interface LoginData {
@@ -86,8 +88,18 @@ export const SessionContextProvider: React.FC = ({ children }) => {
     setLoadingAuthentication(false);
   }
 
+  async function logout() {
+    setLoadingAuthentication(true);
+    removeEncryptedDataAsyncStorage("accessToken");
+    setAccessToken(null);
+    setIsActiveUser(false);
+    removeEncryptedDataAsyncStorage("refreshToken");
+    setRefreshToken(null);
+    await setLoadingAuthentication(false);
+  }
+
   return (
-    <SessionContext.Provider value={{ login }}>
+    <SessionContext.Provider value={{ login, logout }}>
       {children}
     </SessionContext.Provider>
   );
