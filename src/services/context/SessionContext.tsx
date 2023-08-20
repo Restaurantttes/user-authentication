@@ -1,23 +1,9 @@
-import {
-  authenticateAsync,
-  supportedAuthenticationTypesAsync,
-} from "expo-local-authentication";
-import { t } from "i18next";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Alert } from "react-native";
+import React, { createContext, useContext } from "react";
 import {
   removeEncryptedDataAsyncStorage,
-  saveDataAsyncStorage,
   saveEncryptedDataAsyncStorage
 } from "../../utils/storage";
 import { AuthenticationContext } from "./AuthenticationContext";
-
-enum BiometricType {
-  TouchID = 1,
-  FaceID = 2,
-  Iris = 3,
-  None = 0,
-}
 
 interface SessionContextType {
   login: (userData: UserDataType) => Promise<void>;
@@ -50,20 +36,8 @@ export const SessionContextProvider: React.FC = ({ children }) => {
     setRefreshToken,
     setIsActiveUser,
     setLoadingAuthentication,
-    isBiometricAvailable,
-    permissionBiometric,
+
   } = useContext(AuthenticationContext);
-
-  const [biometricType, setBiometricType] = useState<BiometricType>(
-    BiometricType.None
-  );
-
-  useEffect(() => {
-    (async () => {
-      const type = await supportedAuthenticationTypesAsync();
-      setBiometricType(parseInt(type?.toString()) || BiometricType.None);
-    })();
-  }, []);
 
   async function login(userData: UserDataType): Promise<void> {
     setLoadingAuthentication(true);
@@ -74,16 +48,6 @@ export const SessionContextProvider: React.FC = ({ children }) => {
     saveEncryptedDataAsyncStorage("refreshToken", userData.loginData.refreshToken);
 
     setIsActiveUser(true);
-
-    if (
-      isBiometricAvailable &&
-      (permissionBiometric === undefined || permissionBiometric === null)
-    ) {
-      alertPermissionBiometricAuthentication(
-        biometricType,
-        JSON.stringify(userData.login)
-      );
-    }
 
     setLoadingAuthentication(false);
   }
@@ -103,38 +67,4 @@ export const SessionContextProvider: React.FC = ({ children }) => {
       {children}
     </SessionContext.Provider>
   );
-};
-
-const activateBiometricAuth = async (credentials: any) => {
-  const result = await authenticateAsync();
-  if (result.success) {
-    saveDataAsyncStorage("biometricPermission", "true");
-    saveEncryptedDataAsyncStorage("authCredentials", credentials);
-  }
-};
-
-const alertPermissionBiometricAuthentication = (
-  type: BiometricType,
-  credentials: any
-) => {
-  const message =
-    type === BiometricType.TouchID
-      ? t("authentication.biometric.message-touch-id")
-      : type === BiometricType.FaceID
-        ? t("authentication.biometric.message-face-id")
-        : type === BiometricType.Iris
-          ? t("authentication.biometric.message-iris")
-          : t("authentication.biometric.message");
-
-  Alert.alert(t("authentication.biometric.title"), message, [
-    {
-      text: t("authentication.cancel"),
-      onPress: () => saveDataAsyncStorage("biometricPermission", "false"),
-      style: "cancel",
-    },
-    {
-      text: t("authentication.accept"),
-      onPress: () => activateBiometricAuth(credentials),
-    },
-  ]);
 };

@@ -13,7 +13,6 @@ import { LOGIN } from "../../services/graphql/mutation";
 import { getDeviceInput } from "../../utils/getDeviceInput";
 import { Logo } from "../Logo";
 import { Body, FieldContent, FieldsContent, Footer, LoginButtonContent } from "../styled";
-import { BiometricButton } from "./BiometricButton";
 import { ValidationSchema } from "./ValidationSchema";
 
 interface Props {
@@ -25,7 +24,7 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
   const theme = useTheme();
   const { navigate } = useNavigation();
   const [secure, setSecure] = useState<boolean>(true);
-  const { deviceIdentifier, isBiometricAvailable } = useContext(
+  const { deviceIdentifier } = useContext(
     AuthenticationContext,
   );
 
@@ -135,7 +134,10 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
           {t("authentication.login.login")}
         </Button>
 
-        <TouchableOpacity onPress={() => navigate("ForgotPasswordScreen")}>
+        <TouchableOpacity onPress={
+          //@ts-ignore
+          () => navigate("ForgotPasswordScreen")
+        }>
           <Text
             variant="bodyLarge"
             style={{
@@ -148,7 +150,7 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
           </Text>
         </TouchableOpacity>
 
-        {useSocialAuth || isBiometricAvailable ? (
+        {useSocialAuth ? (
           <Text style={{ marginTop: 20, marginBottom: 5, textAlign: "center" }}>
             {t("authentication.login.more")}
           </Text>
@@ -184,14 +186,11 @@ export const FormLogin: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
           </>
         )}
 
-        <BiometricButton
-          whereApp={whichApp}
-          setErr={setErr}
-          deviceIdentifier={deviceIdentifier}
-        />
-
         <Footer>
-          <TouchableOpacity onPress={() => navigate("RegisterScreen")}>
+          <TouchableOpacity onPress={
+            //@ts-ignore
+            () => navigate("RegisterScreen")
+          }>
             <Text variant="bodyLarge">
               {t("authentication.don-account")}{" "}
               <Text style={{ color: theme.colors.primary, fontWeight: 600 }}>
