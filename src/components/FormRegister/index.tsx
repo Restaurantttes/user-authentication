@@ -201,7 +201,7 @@ export const FormRegister: React.FC<Props> = ({ useSocialAuth, whichApp }) => {
             mode="contained"
             theme={{ roundness: 1 }}
             loading={loading}
-            onPress={() => formik.handleSubmit}
+            onPress={formik.handleSubmit}
           >
             {t("authentication.login.login")}
           </Button>
